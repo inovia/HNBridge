@@ -1,0 +1,35 @@
+#include "HNBridge.as"
+
+mes "XmlTextWriter.xml に書き込みを開始します。"
+
+// System.IO.StreamWriterの利用を開始します。
+CreateObjectFromClassName "System.IO.StreamWriter"
+
+// StreamWriter のインスタンスを作成します。
+CreateInstanceWithOneArg "./XmlTextWriter.xml"
+
+//作成したインスタンスをバッファ上に保存しておきます。
+TakeDownFromCurrent "sw";
+
+// System.Xml.XmlTextWriter の利用を開始します。
+// なお、System.Xml.XmlTextWriter は System.Xml.dll にあるため、FullNameで記述する必要があります。
+CreateObjectFromFullName "System.Xml", "System.Xml.XmlTextWriter", "4.0.0.0", "b77a5c561934e089"
+
+// XmlTextWriter のインスタンスを作成します。
+// 作成には先ほど作成した StreamWriter を用います。
+CreateInstanceWithOneArg "class://sw"
+
+// XMLの中身を記述していきます。
+InvokeMethodWithOneArg "WriteStartElement", "HspDotNetSample"
+InvokeMethodWithTwoArgs "WriteElementString", "Version", "1.0.0"
+InvokeMethodWithTwoArgs "WriteElementString", "Binary", "HspDotNetWrapper.dll"
+InvokeMethodWithTwoArgs "WriteElementString", "Module", "HspDotNetWrapper.as"
+InvokeMethodWithZeroArgs "WriteEndElement"
+InvokeMethodWithZeroArgs "Close"
+
+// 先ほどバッファ上に保存した StreamWriter を呼び出します。
+TakeUpFromBuffer "sw";
+InvokeMethodWithZeroArgs "Close";
+
+mes "書き込みました。"
+mes "終了してください。"

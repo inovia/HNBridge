@@ -1,0 +1,75 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 300, 720, 480
+font "メイリオ", 17
+title "HSP .NET Bridge Demo Application"
+font "メイリオ", 17
+objmode 2
+pos 010, 010 : mes "HSP .NET Bridge Demo Application - Source Viewer"
+color 0xCC, 0xCC, 0xCC
+line 10, 35, 710, 35
+color
+
+font "メイリオ", 14
+objsize 340, 30
+pos 020, 040 : button gosub target + ".hsp", *hsp
+if(instr(target, 0, "Demo") == -1) {
+	pos 360, 040 : button gosub target + ".cs", *csharp
+} else {
+	pos 360, 040 : button gosub "C# ソースコードは利用できません", *csharp
+	objenable stat, 0
+}
+
+pos 000, 070 : axobj ie, "Shell.Explorer.2", ginfo_winx + 20, ginfo_winy - 70
+
+onexit gosub *exit
+#ifdef INCLUDES
+return
+#else
+stop
+#endif
+
+*hsp
+exist ".\\resources\\" + target + ".hsp.html"
+if(strsize == -1) {
+	sdim html, 1024 * 100
+	notesel html
+	noteload ".\\resources\\template.hsp.html
+	sdim code, 1024 * 100
+	notesel code
+	noteload ".\\resources\\" + target + ".hsp"
+
+	UnloadAssembly
+	CreateObjectFromClassName "System.Text.StringBuilder"
+	CreateInstanceWithOneArg html
+	InvokeMethodWithTwoArgs "Replace", "%HSP_CODE%", code
+	html_code = GetLastReturnValue()
+	notesel html_code
+	notesave ".\\resources\\" + target + ".hsp.html"
+}
+ie->"Navigate" dir_cur + "\\resources\\" + target + ".hsp.html"
+return
+
+*csharp
+exist ".\\resources\\" + target + ".cs.html"
+if(strsize == -1) {
+	sdim html, 1024 * 100
+	notesel html
+	noteload ".\\resources\\template.cs.html"
+	sdim code, 1024 * 100
+	notesel code
+	noteload ".\\resources\\" + target + ".cs"
+
+	UnloadAssembly
+	CreateObjectFromClassName "System.Text.StringBuilder"
+	CreateInstanceWithOneArg html
+	InvokeMethodWithTwoArgs "Replace", "%CS_CODE%", code
+
+	html_code = GetLastReturnValue()
+	notesel html_code
+	notesave ".\\resources\\" + target + ".cs.html"
+}
+ie->"Navigate" dir_cur + "\\resources\\" + target + ".cs.html"
+return

@@ -1,0 +1,39 @@
+#include "HNBridge.as"
+
+mes "XmlWriter.xml に書き込みを開始します。"
+
+// System.IO.StreamWriter の利用を開始します。
+CreateObjectFromClassName "System.IO.StreamWriter"
+
+// StreamWriter のインスタンスを作成します。
+CreateInstanceWithOneArg "./XmlWriter.xml"
+
+// 作成したインスタンスをバッファ上に保存しておきます。
+TakeDownFromCurrent "sw"
+
+// System.Xml.XmlWriter の使用を開始します。
+// なお、System.Xml.XmlWriter は System.Xml.dll にあるため、FullNameで記述する必要があります。
+CreateObjectFromFullName "System.Xml", "System.Xml.XmlWriter", "4.0.0.0", "b77a5c561934e089"
+
+// XmlWriter.Create を実行します。
+// XmlWriter.Create(Stream) のため、先ほど作成した StreamWriter を用います。
+InvokeMethodWithOneArg "Create", "class://sw"
+
+// XmlWriter.Create(Stream) で作成したオブジェクトをインスタンスとして設定します。
+ToInstance
+
+// XMLの中身を記述していきます。
+InvokeMethodWithOneArg "WriteStartElement", "HNBridgeSample"
+InvokeMethodWithTwoArgs "WriteElementString", "Version", "1.0.0"
+InvokeMethodWithTwoArgs "WriteElementString", "Binary", "HNBridge.dll"
+InvokeMethodWithTwoArgs "WriteElementString", "Module", "HNBridge.as"
+InvokeMethodWithZeroArgs "WriteEndElement"
+InvokeMethodWithZeroArgs "Flush"
+InvokeMethodWithZeroArgs "Close"
+
+// 先ほどバッファ上に保存した StreamWriter を呼び出します。
+TakeUpFromBuffer "sw";
+InvokeMethodWithZeroArgs "Close";
+
+mes "書き込みました。"
+mes "終了してください。"

@@ -1,0 +1,62 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 105, 640, 320
+	title "HSP .NET Bridge Demo Application - 05. プロパティアクセスサンプル"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 05. プロパティアクセスサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample005 のプロパティにアクセスするサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample005"
+	
+	pos 020, 120 : button gosub "Sample005.text の内容を取得", *sample005_001
+	pos 020, 150 : button gosub "Sample005.messgaeの内容を取得", *sample005_002
+	
+	_message = "このボックス内の文字列がインスタンス作成時に渡されます。"
+	
+	pos 020, 180 : mes "Sample005.Text = "
+	pos 210, 180 : mes "";
+	pos 020, 210 : mes "Sample005.Message =";
+	pos 210, 210 : mes ""
+	
+	pos 020, 240 : input _message, 500
+
+	objsize 80, 30
+	pos 540, 280 : button gosub "閉じる", *exit_005
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample005_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 210, 180, 640, 210
+	color
+	pos 210, 180 : mes GetProperty("Text")
+return
+
+*sample005_002
+	color 0xFF, 0xFF, 0xFF
+	boxf 210, 210, 640, 230
+	color
+	CreateInstanceWithOneArg _message
+	pos 210, 210 : mes GetProperty("Message")
+return
+
+*exit_005
+	gsel 105, -1
+return

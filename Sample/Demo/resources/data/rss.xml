@@ -1,0 +1,36 @@
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:sy="http://purl.org/rss/1.0/modules/syndication/" xmlns:slash="http://purl.org/rss/1.0/modules/slash/" version="2.0">
+<channel>
+<title>つやぴんの雑記帳</title>
+<atom:link href="http://blog.tuyapin.net/feed/" rel="self" type="application/rss+xml"/>
+<link>http://blog.tuyapin.net</link>
+<description>なんか書いてみたり</description>
+<lastBuildDate>Sat, 02 Aug 2014 19:49:04 +0000</lastBuildDate>
+<language>ja</language>
+<sy:updatePeriod>hourly</sy:updatePeriod>
+<sy:updateFrequency>1</sy:updateFrequency>
+<generator>http://wordpress.org/?v=3.9.1</generator>
+<item>
+<title>【PSO2】user.pso2をいじってみる</title>
+<link>http://t.co/ECxrGVxpZ0</link>
+<comments>http://blog.tuyapin.net/2014/08/03/%e3%80%90pso2%e3%80%91user-pso2%e3%82%92%e3%81%84%e3%81%98%e3%81%a3%e3%81%a6%e3%81%bf%e3%82%8b/#comments</comments>
+<pubDate>Sat, 02 Aug 2014 19:49:04 +0000</pubDate>
+<dc:creator>
+<![CDATA[ つやぴん ]]>
+</dc:creator>
+<category>
+<![CDATA[ PSO2 ]]>
+</category>
+<guid isPermaLink="false">http://blog.tuyapin.net/?p=1267</guid>
+<description>
+<![CDATA[
+EPISODE:1感動しました。 前回更新の記事から既に1年以上経過して、使いものにならないようになっていたので、 もう一度user.pso2を調べてみました。 なお、間違いがないように注意していますが、念のためuser [&#8230;]
+]]>
+</description>
+<wfw:commentRss>http://blog.tuyapin.net/2014/08/03/%e3%80%90pso2%e3%80%91user-pso2%e3%82%92%e3%81%84%e3%81%98%e3%81%a3%e3%81%a6%e3%81%bf%e3%82%8b/feed/</wfw:commentRss>
+<slash:comments>0</slash:comments>
+</item>
+</channel>
+</rss>
+<!--
+ Quick Cache is NOT caching this page, because `$_SERVER['REQUEST_URI']` indicates this is a `/feed`; and the configuration of this site says not to cache XML-based feeds. 
+-->

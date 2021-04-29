@@ -1,0 +1,53 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 107, 640, 280
+	title "HSP .NET Bridge Demo Application - 07. 例外のキャッチのサンプル"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 07. 例外のキャッチのサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample007 のメソッドを呼び出し、例外を発生させるサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample007"
+	CreateInstanceWithZeroArgs
+	
+	pos 020, 120 : button gosub "Sample007.ExceptionTest() を実行", *sample007_001
+	pos 020, 180 : mes "例外："
+	pos 080, 180 : mes ""
+
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_007
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample007_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 080, 180, 640, 210
+	color
+	InvokeMethodWithZeroArgs "ExceptionTest"
+	sdim exception, 1024 * 100
+	exception = GetLastException()
+	notesel exception
+	sdim line1, 1024 * 100
+	noteget line1, 0
+	pos 080, 180 : mes strmid(line1, instr(line1, 0, "--->") + 4, 1025)
+return
+
+*exit_007
+	gsel 107, -1
+return

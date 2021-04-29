@@ -1,0 +1,59 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 104, 640, 280
+	title "HSP .NET Bridge Demo Application - 04. 配列変数アクセスサンプル"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 04. 配列変数アクセスサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample004 の配列変数にアクセスするサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample004"
+	CreateInstanceWithZeroArgs
+	
+	pos 020, 120 : button gosub "Sample004.array[index]の値を取得", *sample004_001
+	pos 020, 180 : mes "index = "
+	_index = 0;
+	pos 080, 177 : input _index, 120
+	pos 020, 210 : mes "array[" + _index + "] = " 
+	pos 105, 210 : mes "";
+
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_004
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample004_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 020, 210, 640, 240
+	color
+	value = GetAField("array", _index);
+	if(GetHDNStatus() == HDN_STATUS_FAILED) {
+		value = "配列の範囲外です。"
+	}
+	pos 020, 210 : mes "array[" + _index + "] = "
+	if(_index >= 10) {
+		pos 115, 210 : mes value
+	} else {
+		pos 105, 210 : mes value
+	}
+return
+
+*exit_004
+	gsel 104, -1
+return

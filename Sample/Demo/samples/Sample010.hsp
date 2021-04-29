@@ -1,0 +1,61 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 110, 640, 280
+	title "HSP .NET Bridge Demo Application - 10. プリミティブ型以外を引数に渡すサンプル"
+	font "メイリオ", 16
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 10. プリミティブ型以外を引数に渡すサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample010 でプリミティブ型以外を引数に渡すサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	sampleEx = "SampleEXに渡されます。(string)"
+	pos 020, 120 : mes "SampleEx に渡すテキスト"
+	pos 220, 117 : input sampleEx, 340
+	
+	pos 020, 150 : button gosub "SampleEX を作成", *sample010_001 : btnobj = stat
+	
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_010
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample010_001
+	clrobj btnobj, btnobj
+	pos 020, 150 : mes "new Sample010(SampleEX)"
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.SampleEx"
+	CreateInstanceWithOneArg sampleEx
+	
+	TakeDownFromCurrent "sampleEx"
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample010"
+	CreateInstanceWithOneArg "class://sampleEx"
+	
+	InvokeMethodWithZeroArgs "GetPlainText"
+	pos 020, 170 : mes "Sample010.GetPlainText() = "
+	pos 250, 170 : mes GetLastReturnValue()
+	
+	InvokeMethodWithZeroArgs "GetJsonText"
+	pos 020, 190 : mes "Sample010.GetJsonText() = "
+	pos 250, 190 : mes GetLastReturnValue()
+	
+return
+
+*exit_010
+	gsel 110, -1
+return

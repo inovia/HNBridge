@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift-jis">
+<link rel="stylesheet" type="text/css" href="./codemirror/lib/codemirror.css">
+<link rel="stylesheet" type="text/css" href="./codemirror/theme/visualstudio.css">
+<style type="text/css">
+<!--
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .CodeMirror {
+    border: 1px solid #aaa; 
+    height: 385px;
+  }
+  .CodeMirror-scroll { 
+    overflow-x: auto; 
+    overflow-y: hidden;
+  }
+  .CodeMirror pre {
+    font-family: Consolas, Menlo, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif; 
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .CodeMirror-linenumbers,
+  .CodeMirror-linenumber {
+    font-family: Consolas, Menlo, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  -->
+</style>
+<script type="text/javascript" src="./codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="./codemirror/mode/hsp/hsp.js"></script>
+</head>
+<body>
+<div>
+<textarea id="hsp_001">
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 106, 640, 280
+    title "HSP .NET Bridge Demo Application - 06. 配列プロパティアクセスサンプル"
+    font "メイリオ", 17
+    objmode 2
+    pos 010, 010 : mes "HSP .NET Bridge Demo Application - 06. 配列プロパティアクセスサンプル"
+    color 0xCC, 0xCC, 0xCC
+    line 10, 35, 630, 35
+    color
+    
+    font "メイリオ", 15
+    pos 020, 040 : mes "Sample.dll 内の Sample.Sample006 の配列変数にアクセスするサンプルです。"
+    pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+    pos 020, 080 : mes "閲覧することができます。"
+
+    objsize 300, 30
+    
+    LoadAssembly "Sample.dll"
+    CreateObjectFromClassName "Sample.Sample006"
+    CreateInstanceWithZeroArgs
+    
+    pos 020, 120 : button gosub "Sample006.Month[index]の値を取得", *sample006_001
+    pos 020, 180 : mes "index = "
+    _index = 0;
+    pos 080, 177 : input _index, 120
+    pos 020, 210 : mes "Month[" + _index + "] = " 
+    pos 105, 210 : mes "";
+
+    objsize 80, 30
+    pos 540, 240 : button gosub "閉じる", *exit_006
+#ifdef INCLUDES
+return
+#else
+stop
+#endif
+
+*sample006_001
+    color 0xFF, 0xFF, 0xFF
+    boxf 020, 210, 640, 240
+    color
+    value = GetAProperty("Month", _index);
+    if(GetHDNStatus() == HDN_STATUS_FAILED) {
+        value = "配列の範囲外です。"
+    }
+    pos 020, 210 : mes "Month[" + _index + "] = "
+    if(_index >= 10) {
+        pos 120, 210 : mes value
+    } else {
+        pos 110, 210 : mes value
+    }
+return
+
+*exit_006
+    gsel 106, -1
+return
+
+</textarea>
+</div>
+<script type="text/javascript">
+var hspDefineEditor = CodeMirror.fromTextArea(document.getElementById("hsp_001"), {
+  lineNumbers: true,
+  mode: "text/x-hsp",
+  theme: "visualstudio",
+  readOnly: true
+});
+</script>
+</body>
+</html>

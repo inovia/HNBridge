@@ -1,0 +1,55 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 111, 640, 280
+	title "HSP .NET Bridge Demo Application - 11. 型キャストのサンプル"
+	font "メイリオ", 16
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 11. 型キャストのサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample011.GetPI() で受け取ったdouble型の戻り値を"
+	pos 020, 060 : mes "int型にキャストして、その値を取得します。"
+	pos 020, 080 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 100 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample011"
+	
+	pos 020, 150 : button gosub "型キャスト", *sample011_001
+	pos 020, 180 : mes "(int)Sample011.GetPI() = "
+	pos 220, 180 : mes ""
+	pos 020, 200 : mes "Sample011.GetPI() = "
+	pos 220, 200 : mes ""
+	
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_011
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample011_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 220, 180, 640, 200
+	boxf 220, 200, 640, 220
+	color
+	InvokeMethodWithZeroArgs "GetPI"
+	CastToFromClassName "System.Int32"
+	pos 220, 180 : mes GetLastReturnValue()
+	
+	InvokeMethodWithZeroArgs "GetPI"
+	pos 220, 200 : mes GetLastReturnValue()
+return
+
+*exit_011
+	gsel 111, -1
+return

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift-jis">
+<link rel="stylesheet" type="text/css" href="./codemirror/lib/codemirror.css">
+<link rel="stylesheet" type="text/css" href="./codemirror/theme/visualstudio.css">
+<style type="text/css">
+<!--
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .CodeMirror {
+    border: 1px solid #aaa; 
+    height: 385px;
+  }
+  .CodeMirror-scroll { 
+    overflow-x: auto; 
+    overflow-y: hidden;
+  }
+  .CodeMirror pre {
+    font-family: Consolas, Menlo, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif; 
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .CodeMirror-linenumbers,
+  .CodeMirror-linenumber {
+    font-family: Consolas, Menlo, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  -->
+</style>
+<script type="text/javascript" src="./codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="./codemirror/mode/hsp/hsp.js"></script>
+</head>
+<body>
+<div>
+<textarea id="hsp_001">
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 102, 640, 400
+    title "HSP .NET Bridge Demo Application - 02. メソッド実行サンプル その２"
+    font "メイリオ", 17
+    objmode 2
+    pos 010, 010 : mes "HSP .NET Bridge Demo Application - 02. メソッド実行サンプル その２"
+    color 0xCC, 0xCC, 0xCC
+    line 10, 35, 630, 35
+    color
+    
+    font "メイリオ", 15
+    pos 020, 040 : mes "Sample.dll 内の Sample.Sample002 のインスタンスを作成し、"
+    pos 020, 060 : mes "メソッドを呼び出すサンプルです。"
+    pos 020, 080 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+    pos 020, 100 : mes "閲覧することができます。"
+
+    objsize 300, 30
+    
+    LoadAssembly "Sample.dll"
+    CreateObjectFromClassName "Sample.Sample002" 
+    
+    x = "100"
+    y = "50"
+    
+    pos 020, 140 : mes "X = "
+    pos 060, 137 : input x, 150
+    pos 220, 140 : mes ","
+    pos 240, 140 : mes "Y = "
+    pos 280, 137 : input y, 150
+    
+    pos 020, 180 : button gosub "X, Yを使ってインスタンス作成", *sample002_001
+
+    objsize 80, 30
+    pos 540, 360 : button gosub "閉じる", *exit_002
+#ifdef INCLUDES
+return
+#else
+stop
+#endif
+
+*sample002_001
+    CreateInstanceWithTwoArgs "int://" + x, "int://" + y
+    if(sample002_start != 0) {
+        return
+    }
+    objsize 300, 30
+    pos 020, 210 : button gosub "Sample002.Add()", *sample002_002 : sample002_start = stat
+    pos 340, 213 : mes "X + Y = "
+    pos 410, 213 : mes ""
+    
+    pos 020, 240 : button gosub "Sample002.Sub()", *sample002_003
+    pos 340, 243 : mes "X - Y = "
+    pos 410, 243 : mes ""
+    
+    pos 020, 270 : button gosub "Sample002.Mul()", *sample002_004
+    pos 340, 273 : mes "X * Y = "
+    pos 410, 273 : mes ""
+    
+    pos 020, 300 : button gosub "Sample002.Div()", *sample002_005
+    pos 340, 303 : mes "X / Y = "
+    pos 410, 303 : mes ""
+    
+    pos 020, 330 : button gosub "Sample002.Res()", *sample002_006 : sample002_end = stat
+    pos 340, 333 : mes "X % Y = "
+    pos 410, 333 : mes ""
+return
+
+*sample002_002
+    InvokeMethodWithZeroArgs "Add"
+    color 0xFF, 0xFF, 0xFF
+    boxf 410, 213, 640, 240
+    color
+    pos 410, 213 : mes GetLastReturnValue()
+return
+
+*sample002_003
+    InvokeMethodWithZeroArgs "Sub"
+    color 0xFF, 0xFF, 0xFF
+    boxf 410, 243, 640, 270
+    color
+    pos 410, 243 : mes GetLastReturnValue()
+return
+
+*sample002_004
+    InvokeMethodWithZeroArgs "Mul"
+    color 0xFF, 0xFF, 0xFF
+    boxf 410, 273, 640, 300
+    color
+    pos 410, 273 : mes GetLastReturnValue()
+return
+
+*sample002_005
+    InvokeMethodWithZeroArgs "Div"
+    color 0xFF, 0xFF, 0xFF
+    boxf 410, 303, 640, 330
+    color
+    pos 410, 303 : mes GetLastReturnValue()
+return
+
+*sample002_006
+    InvokeMethodWithZeroArgs "Res"
+    color 0xFF, 0xFF, 0xFF
+    boxf 410, 333, 640, 360
+    color
+    pos 410, 333 : mes GetLastReturnValue()
+return
+
+*exit_002
+    gsel 102, -1
+return
+</textarea>
+</div>
+<script type="text/javascript">
+var hspDefineEditor = CodeMirror.fromTextArea(document.getElementById("hsp_001"), {
+  lineNumbers: true,
+  mode: "text/x-hsp",
+  theme: "visualstudio",
+  readOnly: true
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 202, 640, 380
+	title "HSP .NET Bridge Demo Application - 02. XMLファイル読込"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 02. XMLファイル読込"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "HSPからHNBridgeを利用して、XMLファイルの操作を行うデモアプリです。"
+	pos 020, 060 : mes "デモアプリケーションのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+
+#ifdef INCLUDES
+	file = ".//resources//data//rss.xml"
+#else
+	file = "..//resources//data//rss.xml"
+#endif
+	pos 020, 120 : mes "「" + file + "」を読み込み、パースします。"
+	
+	objsize 610, 30
+	pos 020, 150 : button gosub "パース", *demo002_parse
+	
+	objsize 80, 30
+	pos 540, 340 : button gosub "閉じる", *exit_202
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*demo002_parse
+	CreateObjectFromFullName "System.Xml", "System.Xml.XmlTextReader", "4.0.0.0", "b77a5c561934e089"
+	CreateInstanceWithOneArg file
+	xmlText = "";
+	InvokeMethodWithOneArg "ReadToFollowing", "title"
+	InvokeMethodWithZeroArgs "ReadElementContentAsString"
+	pos 020, 180 : mes "ブログタイトル："
+	pos 220, 180 : mes GetLastReturnValue()
+	
+	InvokeMethodWithOneArg "ReadToFollowing", "item"
+	InvokeMethodWithOneArg "ReadToFollowing", "title"
+	InvokeMethodWithZeroArgs "ReadElementContentAsString"
+	pos 020, 200 : mes "最新記事タイトル："
+	pos 220, 200 : mes GetLastReturnValue()
+	
+	InvokeMethodWithOneArg "ReadToFollowing", "link"
+	InvokeMethodWithZeroArgs "ReadElementContentAsString"
+	pos 020, 220 : mes "リンクURL："
+	pos 220, 220 : mes GetLastReturnValue()
+	
+	InvokeMethodWithTwoArgs "ReadToFollowing", "creator", "http://purl.org/dc/elements/1.1/"
+	InvokeMethodWithZeroArgs "ReadElementContentAsString"
+	pos 020, 240 : mes "投稿者名："
+	//Replace
+	TakeDownFromCurrent "xtr"
+	CreateObjectFromClassName "System.Text.StringBuilder"
+	CreateInstanceWithOneArg GetLastReturnValue()
+	InvokeMethodWithTwoArgs "Replace", "\n", ""
+	pos 220, 240 : mes GetLastReturnValue()
+	
+	TakeUpFromBuffer "xtr"
+	InvokeMethodWithOneArg "ReadToFollowing", "category"
+	InvokeMethodWithZeroArgs "ReadElementContentAsString"
+	pos 020, 260 : mes "カテゴリー名："
+	
+	//Replace
+	TakeDownFromCurrent "xtr"
+	CreateObjectFromClassName "System.Text.StringBuilder"
+	CreateInstanceWithOneArg GetLastReturnValue()
+	InvokeMethodWithTwoArgs "Replace", "\n", ""
+	pos 220, 260 : mes GetLastReturnValue()
+	
+	TakeUpFromBuffer "xtr"
+	InvokeMethodWithOneArg "ReadToFollowing", "description"
+	InvokeMethodWithZeroArgs "ReadElementContentAsString"
+	pos 020, 280 : mes "記事(短文)："
+	
+	//Replace
+	TakeDownFromCurrent "xtr"
+	CreateObjectFromClassName "System.Text.StringBuilder"
+	CreateInstanceWithOneArg GetLastReturnValue()
+	InvokeMethodWithTwoArgs "Replace", "\n", ""
+	b = GetLastReturnValue()
+	pos 220, 280 : mes strmid(b, 0, 30) + "..."
+	
+return
+
+
+*exit_202
+	gsel 202, -1
+return

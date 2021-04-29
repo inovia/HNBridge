@@ -1,0 +1,65 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 109, 640, 280
+	title "HSP .NET Bridge Demo Application - 09. 複数のクラスを扱うサンプル"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 09. 複数のクラスを扱うサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample009AB で複数のクラスを扱うサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample009A"
+	CreateInstanceWithZeroArgs
+	TakeDownFromCurrent "sample009a"
+
+	LoadAssembly "Sample.dll"	
+	CreateObjectFromClassName "Sample.Sample009B"
+	CreateInstanceWithZeroArgs
+	TakeDownFromCurrent "sample009b"
+	
+	pos 020, 120 : mes "Sample009A.GetText() = "
+	pos 220, 120 : mes ""
+	
+	pos 020, 140 : mes "Sample009B.GetText() = "
+	pos 220, 140 : mes ""
+	
+	pos 020, 200 : button gosub "実行", *sample009_001
+
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_009
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample009_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 220, 120, 640, 140
+	boxf 220, 140, 640, 160
+	color
+	TakeUpFromBuffer "sample009a"
+	InvokeMethodWithZeroArgs "GetText"
+	pos 220, 120 : mes GetLastReturnValue()
+	
+	TakeDownFromCurrent "sample009a"
+	TakeUpFromBuffer "sample009b"
+	InvokeMethodWithZeroArgs "GetText"
+	pos 220, 140 : mes GetLastReturnValue()
+return
+
+*exit_009
+	gsel 109, -1
+return

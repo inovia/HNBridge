@@ -1,0 +1,90 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 203, 640, 380
+	title "HSP .NET Bridge Demo Application - 03. JSONファイル読込"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 03. JSONファイル読込"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "HSPからHNBridgeを利用して、JSONファイルの操作を行うデモアプリです。"
+	pos 020, 060 : mes "デモアプリケーションのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+
+#ifdef INCLUDES
+	file = ".//resources//data//statuses.json"
+#else
+	file = "..//resources//data//statuses.json"
+#endif
+	pos 020, 120 : mes "「" + file + "」を読み込み、パースします。"
+	
+	objsize 610, 30
+	pos 020, 150 : button gosub "パース", *demo003_parse
+	
+	objsize 80, 30
+	pos 540, 340 : button gosub "閉じる", *exit_203
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*demo003_parse
+	// file を読み込み、中身を取り出します。
+	CreateObjectFromClassName "System.IO.File"
+	InvokeMethodWithOneArg "OpenText", file
+	ToInstance
+	//CreateObjectFromClassName "System.IO.StreamReader"
+	InvokeMethodWithZeroArgs "ReadToEnd"
+	jsontext = GetLastReturnValue()
+	
+	//var a = JArray.Parse(jsontext);
+	LoadAssembly "Newtonsoft.Json.dll"
+	CreateObjectFromClassName "Newtonsoft.Json.Linq.JArray"
+	InvokeMethodWithOneArg "Parse", jsontext
+	ToInstance
+	//var b = a.First;
+	a = GetProperty("First")
+	//var c = (JObject)b;
+	CastToFromClassNameWithLoadingAssembly "Newtonsoft.Json.Linq.JObject", "Newtonsoft.Json.dll"
+	ToInstance
+	CreateObjectFromClassName "Newtonsoft.Json.Linq.JObject"
+	//c.GetValue("text").ToString()
+	InvokeMethodWithOneArg "GetValue", "text"
+	pos 020, 200 : mes GetLastReturnValue()
+	
+	InvokeMethodWithOneArg "GetValue", "created_at"
+	created_at = GetLastReturnValue()
+	split created_at, " ", week, month, day, time, tz, year
+	pos 020, 220 : mes year + " " + month + " " + day + "  " + time
+	
+	InvokeMethodWithOneArg "GetValue", "source"
+	via = GetLastReturnValue()
+	a = instr(via, 0, ">")
+	pos 220, 220 : mes "via " + strmid(via, a + 1, instr(via, a, "<") - 1);
+
+	//var d = (JObject)c.GetValue("user")
+	InvokeMethodWithOneArg "GetValue", "user"
+	CastToFromClassNameWithLoadingAssembly "Newtonsoft.Json.Linq.JObject", "Newtonsoft.Json.dll"
+	ToInstance
+	
+	//d.GetValue("screen_name").ToString()
+	InvokeMethodWithOneArg "GetValue", "screen_name"
+	screen_name = "@" + GetLastReturnValue()
+	
+	InvokeMethodWithOneArg "GetValue", "name"
+	pos 020, 180 : mes GetLastReturnValue() + "  " + screen_name
+return
+
+
+*exit_203
+	gsel 203, -1
+return

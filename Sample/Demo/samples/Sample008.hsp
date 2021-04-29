@@ -1,0 +1,65 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 108, 640, 280
+	title "HSP .NET Bridge Demo Application - 08. 引数の型を指定して呼び出すサンプル"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 08. 引数の型を指定して呼び出すサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample008 で引数の型を指定して呼び出すサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample008"
+	
+	d = "1.5"
+	i = "123"
+	f = "3.14"
+	s = "文字列"
+	
+	pos 020, 120 : mes "double 型 = "
+	pos 120, 117 : input d, 150
+	
+	pos 320, 120 : mes "int 型 = "
+	pos 420, 117 : input i, 150
+	
+	pos 020, 150 : mes "float 型 = "
+	pos 120, 147 : input f, 150
+	
+	pos 320, 150 : mes "string 型 = "
+	pos 420, 147 : input s, 150
+	
+	pos 020, 180 : button gosub "実行", *sample008_001
+	pos 020, 210 : mes "GetText() = "
+	pos 180, 210 : mes ""
+
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_008
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample008_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 180, 210, 640, 240
+	color
+	CreateInstanceWithFourArgs "double://" + d, "int://" + i, "float://" + f, "string://" + s
+	InvokeMethodWithZeroArgs "GetText"
+	pos 180, 210 : mes GetLastReturnValue()
+return
+
+*exit_008
+	gsel 108, -1
+return

@@ -1,0 +1,62 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 103, 640, 320
+	title "HSP .NET Bridge Demo Application - 03. 変数アクセスサンプル"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 03. 変数アクセスサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample003 の変数にアクセスするサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample003"
+	
+	pos 020, 120 : button gosub "Sample003.text の内容を取得", *sample003_001
+	pos 020, 150 : button gosub "Sample003.messgaeの内容を取得", *sample003_002
+	
+	_message = "このボックス内の文字列がインスタンス作成時に渡されます。"
+	
+	pos 020, 180 : mes "Sample003.text = "
+	pos 210, 180 : mes "";
+	pos 020, 210 : mes "Sample003.message =";
+	pos 210, 210 : mes ""
+	
+	pos 020, 240 : input _message, 500
+
+	objsize 80, 30
+	pos 540, 280 : button gosub "閉じる", *exit_003
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample003_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 210, 180, 640, 210
+	color
+	pos 210, 180 : mes GetField("text")
+return
+
+*sample003_002
+	color 0xFF, 0xFF, 0xFF
+	boxf 210, 210, 640, 230
+	color
+	CreateInstanceWithOneArg _message
+	pos 210, 210 : mes GetField("message")
+return
+
+*exit_003
+	gsel 103, -1
+return

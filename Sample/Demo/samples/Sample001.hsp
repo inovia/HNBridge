@@ -1,0 +1,49 @@
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 101, 640, 280
+	title "HSP .NET Bridge Demo Application - 01. メソッド実行サンプル その１"
+	font "メイリオ", 17
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 01. メソッド実行サンプル その１"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample001 の静的メソッドを呼び出すサンプルです。"
+	pos 020, 060 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 080 : mes "閲覧することができます。"
+
+	objsize 300, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample001"
+	
+	_text = "このボックス内の文字を Sample001.ShowDialog(string) に渡します。"
+	pos 020, 120 : button gosub "Sample001.ShowDialog() を実行", *sample001_001
+	pos 020, 150 : button gosub "Sample001.ShowDialog(string) を実行", *sample001_002
+	
+	pos 020, 180 : input _text, 520
+
+	objsize 80, 30
+	pos 540, 240 : button gosub "閉じる", *exit_001
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample001_001
+	InvokeMethodWithZeroArgs "ShowDialog"
+return
+
+*sample001_002
+	InvokeMethodWithOneArg "ShowDialog", _text
+return
+
+*exit_001
+	gsel 101, -1
+return

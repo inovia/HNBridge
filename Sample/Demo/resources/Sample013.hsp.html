@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="shift-jis">
+<link rel="stylesheet" type="text/css" href="./codemirror/lib/codemirror.css">
+<link rel="stylesheet" type="text/css" href="./codemirror/theme/visualstudio.css">
+<style type="text/css">
+<!--
+  body {
+    font-family: "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .CodeMirror {
+    border: 1px solid #aaa; 
+    height: 385px;
+  }
+  .CodeMirror-scroll { 
+    overflow-x: auto; 
+    overflow-y: hidden;
+  }
+  .CodeMirror pre {
+    font-family: Consolas, Menlo, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif; 
+    font-size: 14px;
+    line-height: 1.3;
+  }
+
+  .CodeMirror-linenumbers,
+  .CodeMirror-linenumber {
+    font-family: Consolas, Menlo, "Hiragino Kaku Gothic ProN", Meiryo, "MS PGothic", sans-serif;
+    font-size: 14px;
+    line-height: 1.3;
+  }
+  -->
+</style>
+<script type="text/javascript" src="./codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="./codemirror/mode/hsp/hsp.js"></script>
+</head>
+<body>
+<div>
+<textarea id="hsp_001">
+#ifndef INCLUDES
+#include "../HNBridge.as"
+#endif
+
+screen 113, 640, 480
+	title "HSP .NET Bridge Demo Application - 13. Dictionaryを扱うサンプル"
+	font "メイリオ", 16
+	objmode 2
+	pos 010, 010 : mes "HSP .NET Bridge Demo Application - 13. Dictionaryを扱うサンプル"
+	color 0xCC, 0xCC, 0xCC
+	line 10, 35, 630, 35
+	color
+	
+	font "メイリオ", 15
+	pos 020, 040 : mes "Sample.dll 内の Sample.Sample013 のIDictionaryを実装した変数にアクセスし、"
+	pos 020, 060 : mes "要素の追加、削除、取り出しを行います。"
+	pos 020, 080 : mes "Sample.dll及びデモのソースコードは、メインウインドウの「ソースコード」から"
+	pos 020, 100 : mes "閲覧することができます。"
+
+	objsize 350, 30
+	
+	LoadAssembly "Sample.dll"
+	CreateObjectFromClassName "Sample.Sample013"
+	CreateInstanceWithZeroArgs	
+	a = GetField("Numbers")
+	TakeDownFromCurrent "instance"
+	ToInstance
+	//Dictionaryの場合は System.Collections.Generic.Dictionary`2[K,V] とします
+	CreateObjectFromClassName "System.Collections.Generic.Dictionary`2[System.String,System.String]"
+	count = GetProperty("Count")
+	
+	TakeUpFromBuffer "instance"
+	
+	
+	pos 020, 160 : mes "Sample013.Numbers の要素数："
+	pos 260, 160 : mes count
+	
+	pos 020, 190 : button gosub "Numbers[key] の値を取得", *sample013_001
+	pos 020, 230 : mes "key = "
+	_key = "いち"
+	pos 080, 227 : input _key, 240 : _keyBox = stat
+	
+	pos 020, 260 : mes "Numbers[\"" + _key + "\"] = "
+	pos 250, 260 : mes ""
+	
+	pos 020, 310 : button gosub "target の値をキー「key」として追加", *sample013_002
+	pos 020, 350 : mes "target = "
+	_target = "Hot Soup Processor"
+	pos 090, 347 : input _target, 240 : _targetBox = stat
+	
+	pos 020, 400 : button gosub "Numbers[key] の値を削除", *sample013_003
+	
+	objsize 80, 30
+	pos 540, 440 : button gosub "閉じる", *exit_013
+#ifdef INCLUDES
+	onexit gosub *exit
+return
+#else
+stop
+#endif
+
+*sample013_001
+	color 0xFF, 0xFF, 0xFF
+	boxf 020, 260, 640, 290
+	color
+	value = GetDField("Numbers", _key)
+	if(GetHDNStatus() == HDN_STATUS_FAILED || GetLastReturnValue() == HDN_STATUS_NULL) {
+		value = "Dictionaryにキー「\"" + _key + "\"」が含まれていません。"
+	}
+	pos 020, 260 : mes "Numbers[\"" + _key + "\"] = " + value
+return
+
+*sample013_002
+	AddDField "Numbers", _key, _target
+
+	a = GetField("Numbers")
+
+	TakeDownFromCurrent "instance"
+	ToInstance
+
+	CreateObjectFromClassName "System.Collections.Generic.Dictionary`2[System.String,System.String]"
+	count = GetProperty("Count")
+	
+	TakeUpFromBuffer "instance"
+	color 0xFF, 0xFF, 0xFF
+	boxf 260, 160, 640, 400
+	color
+	pos 260, 160 : mes count
+	objprm _targetBox, ""
+	objprm _keyBox, ""
+return
+
+*sample013_003
+	DelDField "Numbers", _key
+	
+	a = GetField("Numbers")
+
+	TakeDownFromCurrent "instance"
+	ToInstance
+	CreateObjectFromClassName "System.Collections.Generic.Dictionary`2[System.String,System.String]"
+	count = GetProperty("Count")
+	
+	TakeUpFromBuffer "instance"
+	color 0xFF, 0xFF, 0xFF
+	boxf 260, 160, 640, 400
+	color
+	pos 260, 160 : mes count
+return
+
+*exit_013
+	gsel 113, -1
+return
+</textarea>
+</div>
+<script type="text/javascript">
+var hspDefineEditor = CodeMirror.fromTextArea(document.getElementById("hsp_001"), {
+  lineNumbers: true,
+  mode: "text/x-hsp",
+  theme: "visualstudio",
+  readOnly: true
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+#uselib "user32.dll"
+#func GetClientRect "GetClientRect" int, int
+#func SetWindowLong "SetWindowLongA" int, int, int
+#func SetParent "SetParent" int, int
+
+#ifndef INCLUDES
+#define global INCLUDES
+#include "HNBridge.as"
+#endif
+
+dim rect, 4
+
+screen 0, 640, 480
+hWindow = hwnd;
+GetClientRect hWindow, varptr(rect)
+sendmsg hWindow, $1328, , varptr(rect)
+title "HSP .NET Bridge Demo Application"
+font "メイリオ", 17
+objmode 2
+pos 010, 010 : mes "HSP .NET Bridge Demo Application"
+color 0xCC, 0xCC, 0xCC
+line 10, 35, 630, 35
+color
+line 20, 110, 620, 110
+
+font "メイリオ", 15
+pos 020, 040 : mes "HSP から .NET Framework のAPI群および、.NET Framework 製のライブラリを"
+pos 020, 060 : mes "呼び出すデモアプリケーションです。"
+pos 020, 080 : mes "動作には .NET Framework 4.5 以上が必要です。"
+
+// メニュー
+objsize 24, 24
+pos ginfo_winx / 2 - 46, 450 : button gosub "1", *window_1
+pos ginfo_winx / 2 - 12, 450 : button gosub "2", *window_2
+pos ginfo_winx / 2 + 22, 450 : button gosub "3", *window_3
+
+
+// 以下、デモ画面
+// X:000-640, Y:120-440
+
+// ページ001
+bgscr 20, 640, 330, 2, rect.0, rect.1 + 120
+hWindow20 = hwnd
+SetWindowLong hWindow20, -16, 0x40000000
+SetParent hWindow20, hWindow
+font "メイリオ", 15
+objmode 2
+objsize 100, 21
+
+pos 020, 000 : mes "01. メソッド実行サンプル その１"
+pos 430, 000 : button gosub "実行", *hnb_sample01
+pos 530, 000 : button gosub "ソースコード", *hnb_sample01_src
+
+pos 020, 020 : mes "02. メソッド実行サンプル その２"
+pos 430, 020 : button gosub "実行", *hnb_sample02
+pos 530, 020 : button gosub "ソースコード", *hnb_sample02_src
+
+pos 020, 040 : mes "03. 変数アクセスサンプル"
+pos 430, 040 : button gosub "実行", *hnb_sample03
+pos 530, 040 : button gosub "ソースコード", *hnb_sample03_src
+
+pos 020, 060 : mes "04. 配列変数アクセスサンプル"
+pos 430, 060 : button gosub "実行", *hnb_sample04
+pos 530, 060 : button gosub "ソースコード", *hnb_sample04_src
+
+pos 020, 080 : mes "05. プロパティアクセスサンプル"
+pos 430, 080 : button gosub "実行", *hnb_sample05
+pos 530, 080 : button gosub "ソースコード", *hnb_sample05_src
+
+pos 020, 100 : mes "06. 配列プロパティアクセスサンプル"
+pos 430, 100 : button gosub "実行", *hnb_sample06
+pos 530, 100 : button gosub "ソースコード", *hnb_sample06_src
+
+pos 020, 120 : mes "07. 例外のキャッチのサンプル"
+pos 430, 120 : button gosub "実行", *hnb_sample07
+pos 530, 120 : button gosub "ソースコード", *hnb_sample07_src
+
+pos 020, 140 : mes "08. 引数の型を指定して呼び出すサンプル"
+pos 430, 140 : button gosub "実行", *hnb_sample08
+pos 530, 140 : button gosub "ソースコード", *hnb_sample08_src
+
+pos 020, 160 : mes "09. 複数のクラスを扱うサンプル"
+pos 430, 160 : button gosub "実行", *hnb_sample09
+pos 530, 160 : button gosub "ソースコード", *hnb_sample09_src
+
+pos 020, 180 : mes "10. プリミティブ型以外を引数に渡すサンプル"
+pos 430, 180 : button gosub "実行", *hnb_sample10
+pos 530, 180 : button gosub "ソースコード", *hnb_sample10_src
+
+pos 020, 200 : mes "11. 型キャストのサンプル"
+pos 430, 200 : button gosub "実行", *hnb_sample11
+pos 530, 200 : button gosub "ソースコード", *hnb_sample11_src
+
+pos 020, 220 : mes "12. Listを扱うサンプル"
+pos 430, 220 : button gosub "実行", *hnb_sample12
+pos 530, 220 : button gosub "ソースコード", *hnb_sample12_src
+
+pos 020, 240 : mes "13. Dictionaryを扱うサンプル"
+pos 430, 240 : button gosub "実行", *hnb_sample13
+pos 530, 240 : button gosub "ソースコード", *hnb_sample13_src
+
+// ページ002
+bgscr 21, 640, 330, 2, rect.0, rect.1 + 120
+hWindow21 = hwnd
+SetWindowLong hWindow21, -16, 0x40000000
+SetParent hWindow21, hWindow
+font "メイリオ", 15
+objmode 2
+objsize 100, 21
+
+pos 020, 000 : mes "01. ZIPファイル操作 (System.IO.Compression 名前空間)"
+pos 430, 000 : button gosub "実行", *zip
+pos 530, 000 : button gosub "ソースコード", *zip_src
+
+pos 020, 020 : mes "02. XMLファイル読込 (System.Xml 名前空間)"
+pos 430, 020 : button gosub "実行", *xml
+pos 530, 020 : button gosub "ソースコード", *xml_src
+
+pos 020, 040 : mes "03. JSONファイル読込 (Newtonsoft.Json.Linq 名前空間)"
+pos 430, 040 : button gosub "実行", *json
+pos 530, 040 : button gosub "ソースコード", *json_src
+
+//挫折
+color 0xCC, 0xCC, 0xCC
+pos 020, 060 : mes "04. LINQ to XML (System.Xml.Linq 名前空間)"
+pos 430, 060 : button gosub "実行", *linqToXml : objenable stat, 0
+pos 530, 060 : button gosub "ソースコード", *linqToXml : objenable stat, 0
+
+color
+
+// ページ003
+bgscr 22, 640, 330, 2, rect.0, rect.1 + 120
+hWindow22 = hwnd
+SetWindowLong hWindow22, -16, 0x40000000
+SetParent hWindow22, hWindow
+font "メイリオ", 17
+objmode 2
+objsize 100, 21
+pos 020, 000 : mes "HSP .NET Bridge Demo Application"
+
+font "メイリオ", 15
+pos 030, 025 : mes "Version 1.0.0"
+pos 030, 045 : mes "Build With"
+pos 050, 065 : mes "HSP .NET Bridge"
+pos 220, 065 : mes "https://github.com/tuyapin/HNBridge"
+pos 050, 085 : mes "Json.NET"
+pos 220, 085 : mes "https://github.com/JamesNK/Newtonsoft.Json"
+pos 050, 105 : mes "CodeMirror"
+pos 220, 105 : mes "https://github.com/marijnh/codemirror"
+pos 050, 125 : mes "hsp.js for CodeMirror"
+pos 220, 125 : mes "https://github.com/tuyapin/CodeMirror-HSP"
+// ページ001表示
+gsel 20, 1
+
+stop
+*hnb_sample01
+	#include "samples/Sample001.hsp"
+return
+
+*hnb_sample01_src
+	target = "Sample001"
+	gosub *view_source
+return
+
+*hnb_sample02
+	#include "samples/Sample002.hsp"
+return
+
+*hnb_sample02_src
+	target = "Sample002"
+	gosub *view_source
+return
+
+*hnb_sample03
+	#include "samples/Sample003.hsp"
+return
+
+*hnb_sample03_src
+	target = "Sample003"
+	gosub *view_source
+return
+
+*hnb_sample04
+	#include "samples/Sample004.hsp"
+return
+
+*hnb_sample04_src
+	target = "Sample004"
+	gosub *view_source
+return
+
+*hnb_sample05
+	#include "samples/Sample005.hsp"
+return
+
+*hnb_sample05_src
+	target = "Sample005"
+	gosub *view_source
+return
+
+*hnb_sample06
+	#include "samples/Sample006.hsp"
+return
+
+*hnb_sample06_src
+	target = "Sample006"
+	gosub *view_source
+return
+
+*hnb_sample07
+	#include "samples/Sample007.hsp"
+return
+
+*hnb_sample07_src
+	target = "Sample007"
+	gosub *view_source
+return
+
+*hnb_sample08
+	#include "samples/Sample008.hsp"
+return
+
+*hnb_sample08_src
+	target = "Sample008"
+	gosub *view_source
+return
+
+*hnb_sample09
+	#include "samples/Sample009.hsp"
+return
+
+*hnb_sample09_src
+	target = "Sample009"
+	gosub *view_source
+return
+
+*hnb_sample10
+	#include "samples/Sample010.hsp"
+return
+
+*hnb_sample10_src
+	target = "Sample010"
+	gosub *view_source
+return
+
+*hnb_sample11
+	#include "samples/Sample011.hsp"
+return
+
+*hnb_sample11_src
+	target = "Sample011"
+	gosub *view_source
+return
+
+*hnb_sample12
+	#include "samples/Sample012.hsp"
+return
+
+*hnb_sample12_src
+	target = "Sample012"
+	gosub *view_source
+return
+
+*hnb_sample13
+	#include "samples/Sample013.hsp"
+return
+
+*hnb_sample13_src
+	target = "Sample013"
+	gosub *view_source
+return
+
+*zip
+	#include "demos/Demo001_Zipfile.hsp"
+return
+
+*zip_src
+	target = "Demo001_Zipfile"
+	gosub *view_source
+return
+
+*xml
+	#include "demos/Demo002_Xmlfile.hsp"
+return
+
+*xml_src
+	target = "Demo002_Xmlfile"
+	gosub *view_source
+return
+
+*json
+	#include "demos/Demo003_Jsonfile.hsp"
+return
+
+*json_src
+	target = "Demo003_Jsonfile"
+	gosub *view_source
+return
+
+*view_source
+	#include "viewer.hsp"
+return
+
+*linqToXml
+*fileDownload
+return;
+
+*window_1
+	gsel 20, 1  //WINDOW 01
+	gsel 21, -1 //WINDOW 02
+	gsel 22, -1 //WINDOW 03
+return
+
+*window_2
+	gsel 20, -1 //WINDOW 01
+	gsel 21, 1  //WINDOW 02
+	gsel 22, -1 //WINDOW 03
+return
+
+*window_3
+	gsel 20, -1 //WINDOW 01
+	gsel 21, -1 //WINDOW 02
+	gsel 22, 1  //WINDOW 03
+return
+
+*exit
+	if(wparam != 0) {
+		gsel wparam, -1
+	} else {
+		end
+	}
+return
